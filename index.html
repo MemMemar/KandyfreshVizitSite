@@ -848,25 +848,6 @@ async function handleRegister(e) {
   }
 }
 
-    notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
-    
-    showModal(`
-      <h3>Подтверждение email</h3>
-      <p style="margin-bottom:1rem;color:var(--text-secondary)">Код отправлен на <strong>${email}</strong></p>
-      <div class="form-group">
-        <label>Введите код из письма</label>
-        <input type="text" id="verifyCodeInput" maxlength="6" placeholder="000000" style="text-align:center;font-size:1.5rem;letter-spacing:5px">
-      </div>
-      <div class="form-error" id="verifyError"></div>
-      <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="verifyRegistration('${email}','${nickname}','${password}')">Подтвердить</button>
-    `);
-  } catch (err) {
-    console.error('EmailJS Error:', err);
-    errEl.textContent = 'Ошибка отправки: ' + (err.text || 'Попробуйте позже');
-    errEl.classList.add('show');
-  }
-}
-
 async function resendCode(email, nickname) {
   try {
     const res = await fetch(`${API_URL}/api/auth/send-code`, {
