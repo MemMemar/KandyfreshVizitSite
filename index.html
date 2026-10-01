@@ -11,7 +11,6 @@
   --text-primary:#f0f0f0;--text-secondary:#a0a0a0;
   --accent:#e63946;--accent-hover:#ff4d5a;--accent-glow:rgba(230,57,70,.4);
   --border:#2a2a2a;--input-bg:#1e1e1e;
-  --code-color:#00ff00;
 }
 html{scroll-behavior:smooth}
 body{
@@ -96,24 +95,15 @@ section{padding:6rem 0;position:relative}
   90%{opacity:.3}
   100%{transform:translateY(-100px) rotate(720deg);opacity:0}
 }
-/* ===== CODE BACKGROUND ===== */
-.code-background{
+/* ===== CODE BACKGROUND CANVAS ===== */
+#codeCanvas{
   position:fixed;
-  top:0;left:0;width:100%;height:100%;
+  top:0;left:0;
+  width:100%;height:100%;
   z-index:0;
-  opacity:0.12;
   pointer-events:none;
-  overflow:hidden;
-  font-family:'Courier New',monospace;
-  font-size:13px;
-  line-height:1.5;
-  color:var(--code-color);
-  white-space:pre;
-  transition:opacity 0.8s ease, color 0.8s ease;
-  padding:20px;
-}
-.code-background.scrolled{
-  opacity:0.2;
+  opacity:0.15;
+  transition:opacity 0.8s ease;
 }
 .hero{min-height:100vh;display:flex;align-items:center;position:relative;padding-top:80px}
 .hero-content{position:relative;z-index:2;max-width:700px}
@@ -315,7 +305,6 @@ body.light-theme{
   --text-secondary:#555555;
   --border:#d0d0d0;
   --input-bg:#f5f5f5;
-  --code-color:#1a1a1a;
 }
 body.light-theme .navbar{background:rgba(240,240,240,.8)}
 body.light-theme .navbar.scrolled{background:rgba(240,240,240,.95)}
@@ -356,7 +345,6 @@ body.light-theme .admin-panel{background:#ffffff}
 }
 .spam-warning .icon{font-size:1.5rem;flex-shrink:0}
 .spam-warning strong{color:var(--accent);display:block;margin-bottom:.3rem}
-/* ===== PYTHON INTERPRETER (INLINE) ===== */
 .python-section{
   padding:4rem 0;
   position:relative;
@@ -460,7 +448,7 @@ body.light-theme .admin-panel{background:#ffffff}
 
 <div class="loader" id="loader"><div class="loader-spinner"></div></div>
 <div class="particles" id="particles"></div>
-<div class="code-background" id="codeBackground"></div>
+<canvas id="codeCanvas"></canvas>
 
 <div class="celestial-container">
   <div class="celestial-body" id="celestialBody" style="top:15%;right:10%">
@@ -519,7 +507,7 @@ body.light-theme .admin-panel{background:#ffffff}
         <h1>Создаю <span class="highlight">современные</span> сайты на заказ</h1>
         <p>Привет! Я KandyFresh Dev — веб-разработчик, который превращает идеи в стильные, быстрые и функциональные веб-решения.</p>
         <div class="hero-buttons">
-          <button class="btn btn-primary" onclick="navigate('reviews')"> Отзывы</button>
+          <button class="btn btn-primary" onclick="navigate('reviews')">📝 Отзывы</button>
           <button class="btn btn-secondary" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">🚀 Услуги</button>
         </div>
       </div>
@@ -533,7 +521,7 @@ body.light-theme .admin-panel{background:#ffffff}
       </div>
       <div class="services-grid" id="servicesGrid">
         <div class="service-card fade-in">
-          <div class="service-icon">🎨</div>
+          <div class="service-icon"></div>
           <h3>UI/UX Дизайн</h3>
           <p>Современный и интуитивный дизайн, который привлекает и удерживает пользователей.</p>
         </div>
@@ -589,7 +577,7 @@ body.light-theme .admin-panel{background:#ffffff}
           </div>
         </div>
         <div class="portfolio-card fade-in">
-          <div class="portfolio-img" style="background:linear-gradient(135deg,#f093fb,#f5576c)">🎯</div>
+          <div class="portfolio-img" style="background:linear-gradient(135deg,#f093fb,#f5576c)"></div>
           <div class="portfolio-info">
             <h3>Landing Page</h3>
             <p>Высококонверсионная посадочная страница для стартапа.</p>
@@ -600,7 +588,6 @@ body.light-theme .admin-panel{background:#ffffff}
     </div>
   </section>
 
-  <!-- Python Interpreter Section -->
   <section class="python-section">
     <div class="container">
       <div class="section-header fade-in">
@@ -1125,7 +1112,7 @@ async function resendResetCode(email) {
       message: 'Вы запросили повторную отправку кода. Ваш код:',
       code: String(code)
     });
-    notify(' Код отправлен повторно', `Проверьте почту ${email} (и папку "Спам")`, 'success');
+    notify('📧 Код отправлен повторно', `Проверьте почту ${email} (и папку "Спам")`, 'success');
   } catch (err) {
     notify('❌ Ошибка', err.text || 'Попробуйте позже', 'error');
   }
@@ -1408,7 +1395,7 @@ function renderAdminUsers(panel) {
         <td>${date}</td>
         <td class="actions">
           <button class="btn btn-sm btn-secondary" onclick="editUser('${u.id}')">✏️</button>
-          ${u.role !== 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')"></button>` : ''}
+          ${u.role !== 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')">🗑</button>` : ''}
         </td>
       </tr>`;
     }).join('')}
@@ -1651,7 +1638,7 @@ function updateAdminSettings(e) {
 
 function renderAdminReset(panel) {
   panel.innerHTML = `
-    <h3 style="margin-bottom:1rem; color:var(--accent)">⚠️ Сброс данных</h3>
+    <h3 style="margin-bottom:1rem; color:var(--accent)">️ Сброс данных</h3>
     <p style="margin-bottom:1.5rem; color:var(--text-secondary)">
       Эта функция сбросит все данные сайта к начальным настройкам. 
       Все пользователи, отзывы и настройки будут удалены.
@@ -1659,7 +1646,7 @@ function renderAdminReset(panel) {
     <div style="background:rgba(230,57,70,.1); border:1px solid var(--accent); border-radius:10px; padding:1rem; margin-bottom:1.5rem">
       <strong style="color:var(--accent)">Внимание!</strong> Это действие нельзя отменить.
     </div>
-    <button class="btn btn-danger" onclick="resetAllData()" style="width:100%">🗑 Сбросить все данные</button>
+    <button class="btn btn-danger" onclick="resetAllData()" style="width:100%"> Сбросить все данные</button>
   `;
 }
 
@@ -1669,7 +1656,6 @@ function resetAllData() {
   
   localStorage.clear();
   
-  // Восстанавливаем админа
   DB.set('users', [{
     id: 'admin_1', email: 'admin@kandyfresh.dev', password: 'admin123',
     nickname: 'KandyFresh', role: 'admin', avatar: '', createdAt: new Date().toISOString()
@@ -1682,7 +1668,7 @@ function resetAllData() {
       { icon: '', title: 'UI/UX Дизайн', desc: 'Современный и интуитивный дизайн, который привлекает и удерживает пользователей.' },
       { icon: '💻', title: 'Веб-разработка', desc: 'Адаптивные сайты с чистым кодом, быстрой загрузкой и SEO-оптимизацией.' },
       { icon: '🛒', title: 'Интернет-магазины', desc: 'Полноценные e-commerce решения с корзиной, оплатой и управлением товарами.' },
-      { icon: '📱', title: 'Мобильная адаптация', desc: 'Идеальное отображение на любых устройствах — от смартфонов до десктопов.' },
+      { icon: '', title: 'Мобильная адаптация', desc: 'Идеальное отображение на любых устройствах — от смартфонов до десктопов.' },
       { icon: '⚡', title: 'Оптимизация', desc: 'Ускорение загрузки, улучшение Core Web Vitals и техническая оптимизация.' },
       { icon: '🔧', title: 'Поддержка', desc: 'Техническая поддержка, обновления и доработки после запуска проекта.' }
     ]
@@ -1702,55 +1688,110 @@ function closeModal() {
 }
 
 // ===== CODE BACKGROUND ANIMATION =====
+const codeCanvas = document.getElementById('codeCanvas');
+const ctx = codeCanvas.getContext('2d');
+let codeLines = [];
+let codeScrollSpeed = 1;
+let isLightTheme = false;
+
+// Code snippets to display
 const codeSnippets = [
-  'const site = await kandyfresh.create({\n  design: "modern",\n  speed: "blazing"\n});',
-  'function render() {\n  return <App />;\n}',
-  'import React from "react";\nimport { useState } from "react";',
-  'app.get("/", (req, res) => {\n  res.send("Hello World");\n});',
-  'SELECT * FROM users\nWHERE active = true;',
+  'const site = await kandyfresh.create({ design: "modern", speed: "blazing" });',
+  'function render() { return <App />; }',
+  'import React from "react"; import { useState } from "react";',
+  'app.get("/", (req, res) => { res.send("Hello World"); });',
+  'SELECT * FROM users WHERE active = true;',
   'git commit -m "feat: add new feature"',
   'npm install express cors nodemailer',
-  'if (user.isAdmin) {\n  grantAccess();\n}',
-  'async function fetchData() {\n  const res = await fetch(url);\n  return res.json();\n}',
-  'class Developer {\n  constructor(name) {\n    this.name = name;\n  }\n}',
-  'const express = require("express");\nconst app = express();',
+  'if (user.isAdmin) { grantAccess(); }',
+  'async function fetchData() { const res = await fetch(url); return res.json(); }',
+  'class Developer { constructor(name) { this.name = name; } }',
+  'const express = require("express"); const app = express();',
   'db.query("INSERT INTO users VALUES (?)", [user]);',
   'window.addEventListener("load", init);',
-  'export default function Component() {\n  return <div>Hello</div>;\n}'
+  'export default function Component() { return <div>Hello</div>; }',
+  'using namespace std; int main() { cout << "Hello"; return 0; }',
+  'void quicksort(int first, int last) { int i=first; int j=last; }',
+  'for (int i=0; i<size_num; i++) { for(int j=size_num-1; j >=i; j--) }',
+  'int num[] = new int[100000]; srand(time(NULL));',
+  'void bubbleSort(int num[], int size_num) { bool change; }',
+  'long n; ofstream File; File.open("file.txt"); cin>> n;',
+  'register int i = left; register int j = right;',
+  'while(num[j] > x) j--; if(i<=j) { tmp = num[i]; num[i] = num[j]; }'
 ];
 
-let currentCodeIndex = 0;
-let codeOffset = 0;
-
-function updateCodeBackground() {
-  const bg = document.getElementById('codeBackground');
-  let code = '';
-  const linesPerSnippet = 40;
-  
-  for (let i = 0; i < linesPerSnippet; i++) {
-    const idx = (currentCodeIndex + Math.floor(i / 3)) % codeSnippets.length;
-    const snippet = codeSnippets[idx];
-    const lines = snippet.split('\n');
-    const lineIdx = i % lines.length;
-    code += lines[lineIdx] + '\n';
-  }
-  
-  bg.textContent = code;
-  currentCodeIndex = (currentCodeIndex + 1) % codeSnippets.length;
-  codeOffset += 20;
-  bg.style.transform = `translateY(-${codeOffset % 100}px)`;
+function resizeCanvas() {
+  codeCanvas.width = window.innerWidth;
+  codeCanvas.height = window.innerHeight;
 }
 
-setInterval(updateCodeBackground, 2000);
-updateCodeBackground();
+function initCodeLines() {
+  codeLines = [];
+  const fontSize = 14;
+  const lineHeight = fontSize * 1.5;
+  const numLines = Math.ceil(codeCanvas.height / lineHeight) + 10;
+  const numCols = Math.ceil(codeCanvas.width / (fontSize * 0.6)) + 5;
+  
+  for (let i = 0; i < numLines; i++) {
+    let line = '';
+    for (let j = 0; j < numCols; j++) {
+      const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+      const char = snippet[Math.floor(Math.random() * snippet.length)] || ' ';
+      line += char;
+    }
+    codeLines.push({
+      text: line,
+      y: i * lineHeight,
+      speed: Math.random() * 0.5 + 0.3
+    });
+  }
+}
 
-// ===== CELESTIAL ANIMATION (SOFT TRANSITION) =====
+function drawCode() {
+  ctx.clearRect(0, 0, codeCanvas.width, codeCanvas.height);
+  
+  const fontSize = 14;
+  const lineHeight = fontSize * 1.5;
+  const color = isLightTheme ? '#1a1a1a' : '#00ff00';
+  
+  ctx.font = `${fontSize}px 'Courier New', monospace`;
+  ctx.fillStyle = color;
+  ctx.globalAlpha = 0.15;
+  
+  codeLines.forEach(line => {
+    ctx.fillText(line.text, 0, line.y);
+    line.y += line.speed * codeScrollSpeed;
+    
+    if (line.y > codeCanvas.height) {
+      line.y = -lineHeight;
+      const snippet = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+      let newLine = '';
+      for (let j = 0; j < Math.ceil(codeCanvas.width / (fontSize * 0.6)) + 5; j++) {
+        const char = snippet[Math.floor(Math.random() * snippet.length)] || ' ';
+        newLine += char;
+      }
+      line.text = newLine;
+    }
+  });
+  
+  requestAnimationFrame(drawCode);
+}
+
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  initCodeLines();
+});
+
+resizeCanvas();
+initCodeLines();
+drawCode();
+
+// ===== CELESTIAL ANIMATION =====
 function initCelestialAnimation() {
   const body = document.getElementById('celestialBody');
   const circle = document.getElementById('celestialCircle');
   const craters = document.getElementById('moonCraters');
   const rays = document.getElementById('sunRays');
-  const codeBg = document.getElementById('codeBackground');
   const homePage = document.getElementById('page-home');
 
   window.addEventListener('scroll', () => {
@@ -1762,33 +1803,26 @@ function initCelestialAnimation() {
     const rotation = progress * 360;
     body.style.transform = `rotate(${rotation}deg)`;
 
-    // Smooth color transition
     const r = Math.round(192 + (255 - 192) * progress);
     const g = Math.round(192 + (215 - 192) * progress);
     const b = Math.round(192 + (0 - 192) * progress);
     circle.setAttribute('fill', `rgb(${r},${g},${b})`);
 
-    // Soft opacity transitions
     craters.setAttribute('opacity', Math.max(0, 1 - progress * 1.5));
     rays.setAttribute('opacity', Math.max(0, (progress - 0.3) * 1.4));
 
-    // Theme transition (softer threshold)
     if (progress > 0.6) {
       document.body.classList.add('light-theme');
+      isLightTheme = true;
     } else {
       document.body.classList.remove('light-theme');
+      isLightTheme = false;
     }
 
-    // Celestial body position (starts lower)
     const yPos = 15 + progress * 25;
     body.style.top = yPos + '%';
 
-    // Code background changes
-    if (progress > 0.3) {
-      codeBg.classList.add('scrolled');
-    } else {
-      codeBg.classList.remove('scrolled');
-    }
+    codeScrollSpeed = 1 + progress * 2;
   });
 }
 
@@ -1866,7 +1900,7 @@ function runPython() {
     return;
   }
   
-  const lines = code.split('\n').slice(0, 10); // Max 10 lines
+  const lines = code.split('\n').slice(0, 10);
   let result = '';
   let error = null;
   
@@ -1875,7 +1909,6 @@ function runPython() {
       const trimmed = line.trim();
       if (!trimmed || trimmed.startsWith('#')) continue;
       
-      // Handle print()
       if (trimmed.startsWith('print(') && trimmed.endsWith(')')) {
         const content = trimmed.slice(6, -1);
         if (content.startsWith('"') && content.endsWith('"')) {
@@ -1888,7 +1921,6 @@ function runPython() {
           result += String(evalPython(content)) + '\n';
         }
       }
-      // Handle variable assignment
       else if (trimmed.includes('=') && !trimmed.includes('==') && !trimmed.includes('!=') && !trimmed.includes('<=') && !trimmed.includes('>=')) {
         const eqIndex = trimmed.indexOf('=');
         const varName = trimmed.slice(0, eqIndex).trim();
