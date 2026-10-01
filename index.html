@@ -829,7 +829,7 @@ async function handleRegister(e) {
       code: code
     });
 
-    notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
+    notify('📧 Код отправлен!', `Проверьте почту ${email} проверьте спам.`, 'success');
     
     showModal(`
       <h3>Подтверждение email</h3>
@@ -857,7 +857,7 @@ async function resendCode(email, nickname) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    notify('📧 Код отправлен повторно', `Проверьте почту ${email}`, 'success');
+    notify('📧 Код отправлен повторно', `Проверьте почту ${email}  проверьте спам. `, 'success');
   } catch (err) {
     notify('❌ Ошибка', err.message, 'error');
   }
@@ -921,7 +921,7 @@ async function handleForgotPassword(e) {
       code: code
     });
 
-    notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
+    notify('📧 Код отправлен!', `Проверьте почту ${email} проверьте спам.`, 'success');
     
     showModal(`
       <h3>Восстановление пароля</h3>
@@ -952,7 +952,7 @@ async function resendResetCode(email) {
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
-    notify('📧 Код отправлен повторно', `Проверьте почту ${email}`, 'success');
+    notify('📧 Код отправлен повторно', `Проверьте почту ${email} проверьте спам.`, 'success');
   } catch (err) {
     notify('❌ Ошибка', err.message, 'error');
   }
