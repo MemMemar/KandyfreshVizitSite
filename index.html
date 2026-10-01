@@ -332,6 +332,14 @@ body.light-theme .footer{background:#e0e0e0}
 .tag{display:inline-block;padding:.3rem .8rem;background:rgba(230,57,70,.15);color:var(--accent);border-radius:20px;font-size:.8rem;margin:.2rem}
 </style>
 </head>
+  <!-- EmailJS SDK -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script type="text/javascript">
+  (function() {
+    // ЗАМЕНИТЕ 'ВАШ_PUBLIC_KEY' на ваш реальный Public Key из шага 4
+    emailjs.init("ВАШ_PUBLIC_KEY");
+  })();
+</script>
 <body>
 
 <div class="loader" id="loader"><div class="loader-spinner"></div></div>
@@ -794,58 +802,50 @@ async function handleRegister(e) {
   const password = document.getElementById('regPassword').value;
   const confirm = document.getElementById('regPasswordConfirm').value;
   const errEl = document.getElementById('regError');
-  const submitBtn = document.getElementById('regSubmitBtn');
 
-  if (password !== confirm) {
-    errEl.textContent = 'Пароли не совпадают';
-    errEl.classList.add('show');
-    return;
+  if (password !== confirm) { 
+    errEl.textContent = 'Пароли не совпадают'; 
+    errEl.classList.add('show'); 
+    return; 
   }
-
+  
   const users = DB.get('users', []);
-  if (users.find(u => u.email === email)) {
-    errEl.textContent = 'Этот email уже зарегистрирован';
-    errEl.classList.add('show');
-    return;
+  if (users.find(u => u.email === email)) { 
+    errEl.textContent = 'Этот email уже зарегистрирован'; 
+    errEl.classList.add('show'); 
+    return; 
   }
   errEl.classList.remove('show');
 
-  // Блокируем кнопку во время запроса
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Отправка кода...';
+  const code = String(Math.floor(100000 + Math.random() * 900000));
 
   try {
-    const res = await fetch(`${API_URL}/api/auth/send-code`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, nickname }),
+    // ЗАМЕНИТЕ 'ВАШ_SERVICE_ID' и 'ВАШ_TEMPLATE_ID' на ваши реальные ID
+    await emailjs.send("ВАШ_SERVICE_ID", "ВАШ_TEMPLATE_ID", {
+      to_email: email,
+      to_name: nickname,
+      subject: 'Подтверждение регистрации — KandyFresh Dev',
+      title: `Привет, ${nickname}! 👋`,
+      message: 'Спасибо за регистрацию! Ваш код подтверждения:',
+      code: code
     });
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.error || 'Ошибка отправки кода');
 
     notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
-
+    
     showModal(`
       <h3>Подтверждение email</h3>
       <p style="margin-bottom:1rem;color:var(--text-secondary)">Код отправлен на <strong>${email}</strong></p>
-      <p style="margin-bottom:1rem;font-size:.85rem;color:var(--text-secondary)">Проверьте входящие письма (и папку "Спам")</p>
       <div class="form-group">
-        <label>Введите 6-значный код из письма</label>
+        <label>Введите код из письма</label>
         <input type="text" id="verifyCodeInput" maxlength="6" placeholder="000000" style="text-align:center;font-size:1.5rem;letter-spacing:5px">
       </div>
       <div class="form-error" id="verifyError"></div>
       <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="verifyRegistration('${email}','${nickname}','${password}')">Подтвердить</button>
-      <p style="margin-top:1rem;font-size:.8rem;color:var(--text-secondary);text-align:center">
-        Не получили код? <a href="#" onclick="resendCode('${email}','${nickname}')">Отправить повторно</a>
-      </p>
     `);
   } catch (err) {
-    errEl.textContent = err.message;
+    console.error('EmailJS Error:', err);
+    errEl.textContent = 'Ошибка отправки: ' + (err.text || 'Попробуйте позже');
     errEl.classList.add('show');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Зарегистрироваться';
   }
 }
 
@@ -899,26 +899,33 @@ async function handleForgotPassword(e) {
   e.preventDefault();
   const email = document.getElementById('forgotEmail').value.trim();
   const errEl = document.getElementById('forgotError');
-  const submitBtn = document.getElementById('forgotSubmitBtn');
 
-  submitBtn.disabled = true;
-  submitBtn.textContent = 'Отправка...';
+  const users = DB.get('users', []);
+  const user = users.find(u => u.email === email);
+  
+  if (!user) { 
+    errEl.textContent = 'Пользователь с таким email не найден'; 
+    errEl.classList.add('show'); 
+    return; 
+  }
+  errEl.classList.remove('show');
+
+  const code = String(Math.floor(100000 + Math.random() * 900000));
 
   try {
-    const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+    await emailjs.send("ВАШ_SERVICE_ID", "ВАШ_TEMPLATE_ID", {
+      to_email: email,
+      to_name: user.nickname,
+      subject: 'Восстановление пароля — KandyFresh Dev',
+      title: 'Восстановление пароля 🔑',
+      message: 'Вы запросили сброс пароля. Ваш код:',
+      code: code
     });
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.error || 'Ошибка отправки кода');
 
     notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
-
+    
     showModal(`
       <h3>Восстановление пароля</h3>
-      <p style="margin-bottom:1rem;color:var(--text-secondary)">Код отправлен на <strong>${email}</strong></p>
       <div class="form-group">
         <label>Код из письма</label>
         <input type="text" id="resetCodeInput" maxlength="6" placeholder="000000" style="text-align:center;font-size:1.5rem;letter-spacing:5px">
@@ -929,16 +936,11 @@ async function handleForgotPassword(e) {
       </div>
       <div class="form-error" id="resetError"></div>
       <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="resetPassword('${email}')">Сбросить пароль</button>
-      <p style="margin-top:1rem;font-size:.8rem;color:var(--text-secondary);text-align:center">
-        Не получили код? <a href="#" onclick="resendResetCode('${email}')">Отправить повторно</a>
-      </p>
     `);
   } catch (err) {
-    errEl.textContent = err.message;
+    console.error('EmailJS Error:', err);
+    errEl.textContent = 'Ошибка: ' + (err.text || 'Попробуйте позже');
     errEl.classList.add('show');
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Отправить код';
   }
 }
 
@@ -1408,30 +1410,28 @@ async function sendMailing(e) {
   btn.disabled = true;
   btn.textContent = 'Отправка...';
 
-  try {
-    const res = await fetch(`${API_URL}/api/mailing`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        subject,
-        body,
-        recipients: users.map(u => u.email),
-      }),
-    });
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.error);
-
-    notify('✅ Рассылка отправлена!', `Отправлено ${data.sent} писем`, 'success');
-    e.target.reset();
-  } catch (err) {
-    notify('❌ Ошибка', err.message, 'error');
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '📧 Отправить рассылку';
+  let sent = 0;
+  for (const user of users) {
+    try {
+      await emailjs.send("ВАШ_SERVICE_ID", "ВАШ_TEMPLATE_ID", {
+        to_email: user.email,
+        to_name: user.nickname,
+        subject: subject,
+        title: subject,
+        message: body,
+        code: '' // В рассылке код не нужен
+      });
+      sent++;
+    } catch (err) {
+      console.error('Ошибка отправки на', user.email, err);
+    }
   }
-}
 
+  notify('✅ Рассылка отправлена!', `Успешно отправлено ${sent} писем`, 'success');
+  btn.disabled = false;
+  btn.textContent = '📧 Отправить рассылку';
+  e.target.reset();
+}
 function renderAdminSettings(panel) {
   const admin = getCurrentUser();
   panel.innerHTML = `
