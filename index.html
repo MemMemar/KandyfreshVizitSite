@@ -820,8 +820,7 @@ async function handleRegister(e) {
   const code = String(Math.floor(100000 + Math.random() * 900000));
 
   try {
-    // ЗАМЕНИТЕ 'ВАШ_SERVICE_ID' и 'ВАШ_TEMPLATE_ID' на ваши реальные ID
-    await emailjs.send("ВАШ_SERVICE_ID", "ВАШ_TEMPLATE_ID", {
+    await emailjs.send("service_rls8p6t", "template_oj3comw", {
       to_email: email,
       to_name: nickname,
       subject: 'Подтверждение регистрации — KandyFresh Dev',
@@ -829,6 +828,25 @@ async function handleRegister(e) {
       message: 'Спасибо за регистрацию! Ваш код подтверждения:',
       code: code
     });
+
+    notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
+    
+    showModal(`
+      <h3>Подтверждение email</h3>
+      <p style="margin-bottom:1rem;color:var(--text-secondary)">Код отправлен на <strong>${email}</strong></p>
+      <div class="form-group">
+        <label>Введите код из письма</label>
+        <input type="text" id="verifyCodeInput" maxlength="6" placeholder="000000" style="text-align:center;font-size:1.5rem;letter-spacing:5px">
+      </div>
+      <div class="form-error" id="verifyError"></div>
+      <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="verifyRegistration('${email}','${nickname}','${password}')">Подтвердить</button>
+    `);
+  } catch (err) {
+    console.error('EmailJS Error:', err);
+    errEl.textContent = 'Ошибка отправки: ' + (err.text || 'Попробуйте позже');
+    errEl.classList.add('show');
+  }
+}
 
     notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
     
@@ -913,7 +931,7 @@ async function handleForgotPassword(e) {
   const code = String(Math.floor(100000 + Math.random() * 900000));
 
   try {
-    await emailjs.send("ВАШ_SERVICE_ID", "ВАШ_TEMPLATE_ID", {
+    await emailjs.send("service_rls8p6t", "template_oj3comw", {
       to_email: email,
       to_name: user.nickname,
       subject: 'Восстановление пароля — KandyFresh Dev',
@@ -1425,13 +1443,14 @@ async function sendMailing(e) {
     } catch (err) {
       console.error('Ошибка отправки на', user.email, err);
     }
-  }
+}
 
   notify('✅ Рассылка отправлена!', `Успешно отправлено ${sent} писем`, 'success');
   btn.disabled = false;
   btn.textContent = '📧 Отправить рассылку';
   e.target.reset();
 }
+  
 function renderAdminSettings(panel) {
   const admin = getCurrentUser();
   panel.innerHTML = `
