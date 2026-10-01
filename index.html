@@ -13,13 +13,13 @@
   --accent:#e63946;--accent-hover:#ff4d5a;--accent-glow:rgba(230,57,70,.4);
   --border:#2a2a2a;--input-bg:#1e1e1e;
   --theme-progress:0;
-  --sun-x:85%;--sun-y:15%;
 }
 html{scroll-behavior:smooth}
 body{
   font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
   background:var(--bg-primary);color:var(--text-primary);
-  min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;
+  min-height:100vh;overflow-x:hidden;
+  transition:background 0.5s ease, color 0.5s ease;
 }
 a{color:var(--accent);text-decoration:none;transition:color .3s}
 a:hover{color:var(--accent-hover)}
@@ -83,7 +83,7 @@ section{padding:6rem 0;position:relative}
 }
 .celestial-body{
   position:absolute;width:120px;height:120px;
-  transition:transform .1s linear;
+  transition:transform 0.1s linear;
 }
 .celestial-body svg{width:100%;height:100%}
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
@@ -303,14 +303,24 @@ section{padding:6rem 0;position:relative}
   .admin-table{font-size:.8rem}
   .admin-table th,.admin-table td{padding:.5rem}
 }
+/* ===== LIGHT THEME (SOFT GRAY-WHITE) ===== */
 body.light-theme{
-  --bg-primary:#f5f5f5;--bg-secondary:#e8e8e8;--bg-card:#ffffff;
-  --text-primary:#1a1a1a;--text-secondary:#555;
-  --border:#ddd;--input-bg:#f0f0f0;
+  --bg-primary:#f0f0f0;
+  --bg-secondary:#e8e8e8;
+  --bg-card:#ffffff;
+  --text-primary:#2a2a2a;
+  --text-secondary:#555555;
+  --border:#d0d0d0;
+  --input-bg:#f5f5f5;
 }
-body.light-theme .navbar{background:rgba(245,245,245,.8)}
-body.light-theme .navbar.scrolled{background:rgba(245,245,245,.95)}
+body.light-theme .navbar{background:rgba(240,240,240,.8)}
+body.light-theme .navbar.scrolled{background:rgba(240,240,240,.95)}
 body.light-theme .footer{background:#e0e0e0}
+body.light-theme .service-card{background:#ffffff}
+body.light-theme .form-card{background:#ffffff}
+body.light-theme .review-card{background:#ffffff}
+body.light-theme .profile-card{background:#ffffff}
+body.light-theme .admin-panel{background:#ffffff}
 .loader{
   position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg-primary);
   z-index:9999;display:flex;align-items:center;justify-content:center;
@@ -330,16 +340,30 @@ body.light-theme .footer{background:#e0e0e0}
 .flex{display:flex}.gap-1{gap:1rem}.items-center{align-items:center}.justify-between{justify-content:space-between}
 .hidden{display:none!important}
 .tag{display:inline-block;padding:.3rem .8rem;background:rgba(230,57,70,.15);color:var(--accent);border-radius:20px;font-size:.8rem;margin:.2rem}
+/* ===== SPAM WARNING BOX ===== */
+.spam-warning{
+  background:rgba(230,57,70,.1);
+  border:1px solid var(--accent);
+  border-radius:10px;
+  padding:1rem;
+  margin:1rem 0;
+  display:flex;
+  align-items:center;
+  gap:.8rem;
+  font-size:.9rem;
+  color:var(--text-secondary);
+}
+.spam-warning .icon{
+  font-size:1.5rem;
+  flex-shrink:0;
+}
+.spam-warning strong{
+  color:var(--accent);
+  display:block;
+  margin-bottom:.3rem;
+}
 </style>
 </head>
-  <!-- EmailJS SDK -->
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
-<script type="text/javascript">
-  (function() {
-    // ЗАМЕНИТЕ 'ВАШ_PUBLIC_KEY' на ваш реальный Public Key из шага 4
-    emailjs.init("gC1YHY8USuPWM4vD7");
-  })();
-</script>
 <body>
 
 <div class="loader" id="loader"><div class="loader-spinner"></div></div>
@@ -402,7 +426,7 @@ body.light-theme .footer{background:#e0e0e0}
         <h1>Создаю <span class="highlight">современные</span> сайты на заказ</h1>
         <p>Привет! Я KandyFresh Dev — веб-разработчик, который превращает идеи в стильные, быстрые и функциональные веб-решения.</p>
         <div class="hero-buttons">
-          <button class="btn btn-primary" onclick="navigate('reviews')">📝 Отзывы</button>
+          <button class="btn btn-primary" onclick="navigate('reviews')"> Отзывы</button>
           <button class="btn btn-secondary" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">🚀 Услуги</button>
         </div>
       </div>
@@ -458,7 +482,7 @@ body.light-theme .footer{background:#e0e0e0}
           <p>Идеальное отображение на любых устройствах — от смартфонов до десктопов.</p>
         </div>
         <div class="service-card fade-in">
-          <div class="service-icon">⚡</div>
+          <div class="service-icon"></div>
           <h3>Оптимизация</h3>
           <p>Ускорение загрузки, улучшение Core Web Vitals и техническая оптимизация.</p>
         </div>
@@ -486,7 +510,7 @@ body.light-theme .footer{background:#e0e0e0}
           </div>
         </div>
         <div class="portfolio-card fade-in">
-          <div class="portfolio-img" style="background:linear-gradient(135deg,#667eea,#764ba2)">📊</div>
+          <div class="portfolio-img" style="background:linear-gradient(135deg,#667eea,#764ba2)"></div>
           <div class="portfolio-info">
             <h3>Dashboard Analytics</h3>
             <p>Панель аналитики с графиками и real-time данными.</p>
@@ -521,7 +545,7 @@ body.light-theme .footer{background:#e0e0e0}
             <div><strong>Telegram</strong><br><span style="color:var(--text-secondary)">@kandyfresh_dev</span></div>
           </div>
           <div class="contact-item">
-            <div class="icon">🌐</div>
+            <div class="icon"></div>
             <div><strong>GitHub</strong><br><span style="color:var(--text-secondary)">github.com/kandyfresh</span></div>
           </div>
         </div>
@@ -667,17 +691,37 @@ body.light-theme .footer{background:#e0e0e0}
   <div class="modal" id="modalContent"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  // Initialize EmailJS with your public key
+  (function(){
+    emailjs.init("gC1YHY8USuPWM4vD7");
+  })();
+</script>
+
 <script>
 // ==================== CONFIG ====================
-const API_URL = 'https://your-backend-url.onrender.com'; // URL вашего бэкенда (будет позже)
+const EMAILJS_CONFIG = {
+  serviceId: 'service_rls8p6t',
+  templateId: 'template_oj3comw'
+};
 
 // ==================== DATA LAYER ====================
 const DB = {
   get(key, def = null) {
-    try { const d = localStorage.getItem('kf_' + key); return d ? JSON.parse(d) : def; }
-    catch { return def; }
+    try { 
+      const d = localStorage.getItem('kf_' + key); 
+      return d ? JSON.parse(d) : def; 
+    } catch { return def; }
   },
-  set(key, val) { localStorage.setItem('kf_' + key, JSON.stringify(val)); }
+  set(key, val) { 
+    localStorage.setItem('kf_' + key, JSON.stringify(val));
+    // Sync across tabs/windows
+    window.dispatchEvent(new StorageEvent('storage', {
+      key: 'kf_' + key,
+      newValue: JSON.stringify(val)
+    }));
+  }
 };
 
 // Init admin
@@ -697,7 +741,7 @@ if (!DB.get('siteContent')) {
       { icon: '💻', title: 'Веб-разработка', desc: 'Адаптивные сайты с чистым кодом, быстрой загрузкой и SEO-оптимизацией.' },
       { icon: '🛒', title: 'Интернет-магазины', desc: 'Полноценные e-commerce решения с корзиной, оплатой и управлением товарами.' },
       { icon: '📱', title: 'Мобильная адаптация', desc: 'Идеальное отображение на любых устройствах — от смартфонов до десктопов.' },
-      { icon: '⚡', title: 'Оптимизация', desc: 'Ускорение загрузки, улучшение Core Web Vitals и техническая оптимизация.' },
+      { icon: '', title: 'Оптимизация', desc: 'Ускорение загрузки, улучшение Core Web Vitals и техническая оптимизация.' },
       { icon: '🔧', title: 'Поддержка', desc: 'Техническая поддержка, обновления и доработки после запуска проекта.' }
     ]
   });
@@ -775,7 +819,7 @@ function navigate(page) {
   setTimeout(initObservers, 100);
 }
 
-// ==================== FORM HANDLERS (С ИНТЕГРАЦИЕЙ BACKEND) ====================
+// ==================== FORM HANDLERS ====================
 function handleLogin(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
@@ -802,6 +846,7 @@ async function handleRegister(e) {
   const password = document.getElementById('regPassword').value;
   const confirm = document.getElementById('regPasswordConfirm').value;
   const errEl = document.getElementById('regError');
+  const submitBtn = document.getElementById('regSubmitBtn');
 
   if (password !== confirm) { 
     errEl.textContent = 'Пароли не совпадают'; 
@@ -817,22 +862,34 @@ async function handleRegister(e) {
   }
   errEl.classList.remove('show');
 
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Отправка кода...';
+
   const code = String(Math.floor(100000 + Math.random() * 900000));
 
   try {
-    await emailjs.send("service_rls8p6t", "template_oj3comw", {
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
       to_email: email,
-      to_name: nickname,
+      to_name: nickname || 'Пользователь',
       subject: 'Подтверждение регистрации — KandyFresh Dev',
-      title: `Привет, ${nickname}! 👋`,
+      title: `Привет, ${nickname}!`,
       message: 'Спасибо за регистрацию! Ваш код подтверждения:',
-      code: code
+      code: String(code)
     });
 
-    notify('📧 Код отправлен!', `Проверьте почту ${email} проверьте спам.`, 'success');
+    notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
     
     showModal(`
       <h3>Подтверждение email</h3>
+      
+      <div class="spam-warning">
+        <div class="icon">⚠️</div>
+        <div>
+          <strong>Письмо может попасть в папку "Спам"</strong>
+          Проверьте папку "Спам" или "Промоакции", если письмо не пришло в течение 2 минут
+        </div>
+      </div>
+
       <p style="margin-bottom:1rem;color:var(--text-secondary)">Код отправлен на <strong>${email}</strong></p>
       <div class="form-group">
         <label>Введите код из письма</label>
@@ -840,54 +897,61 @@ async function handleRegister(e) {
       </div>
       <div class="form-error" id="verifyError"></div>
       <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="verifyRegistration('${email}','${nickname}','${password}')">Подтвердить</button>
+      <p style="margin-top:1rem;font-size:.8rem;color:var(--text-secondary);text-align:center">
+        Не получили код? <a href="#" onclick="resendCode('${email}','${nickname}')">Отправить повторно</a>
+      </p>
     `);
   } catch (err) {
     console.error('EmailJS Error:', err);
     errEl.textContent = 'Ошибка отправки: ' + (err.text || 'Попробуйте позже');
     errEl.classList.add('show');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Зарегистрироваться';
   }
 }
 
 async function resendCode(email, nickname) {
   try {
-    const res = await fetch(`${API_URL}/api/auth/send-code`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, nickname }),
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+      to_email: email,
+      to_name: nickname || 'Пользователь',
+      subject: 'Подтверждение регистрации — KandyFresh Dev (повторно)',
+      title: `Привет, ${nickname}!`,
+      message: 'Вы запросили повторную отправку кода. Ваш код:',
+      code: String(code)
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-    notify('📧 Код отправлен повторно', `Проверьте почту ${email}  проверьте спам. `, 'success');
+    notify('📧 Код отправлен повторно', `Проверьте почту ${email} (и папку "Спам")`, 'success');
   } catch (err) {
-    notify('❌ Ошибка', err.message, 'error');
+    notify(' Ошибка', err.text || 'Попробуйте позже', 'error');
   }
 }
 
 function verifyRegistration(email, nickname, password) {
   const input = document.getElementById('verifyCodeInput').value.trim();
   const errEl = document.getElementById('verifyError');
-
-  if (input.length !== 6) {
-    errEl.textContent = 'Введите 6-значный код';
-    errEl.classList.add('show');
-    return;
+  
+  if (input.length !== 6) { 
+    errEl.textContent = 'Введите 6-значный код'; 
+    errEl.classList.add('show'); 
+    return; 
   }
 
-  // Сохраняем пользователя локально (в реальном приложении это должен делать бэкенд)
   const users = DB.get('users', []);
   const newUser = {
-    id: 'user_' + Date.now(),
-    email,
-    password,
+    id: 'user_' + Date.now(), 
+    email, 
+    password, 
     nickname,
-    role: 'user',
-    avatar: '',
+    role: 'user', 
+    avatar: '', 
     createdAt: new Date().toISOString()
   };
   users.push(newUser);
   DB.set('users', users);
   DB.set('session', newUser.id);
-
+  
   closeModal();
   updateNav();
   notify('Регистрация успешна!', `Добро пожаловать, ${nickname}!`, 'success');
@@ -898,6 +962,7 @@ async function handleForgotPassword(e) {
   e.preventDefault();
   const email = document.getElementById('forgotEmail').value.trim();
   const errEl = document.getElementById('forgotError');
+  const submitBtn = document.getElementById('forgotSubmitBtn');
 
   const users = DB.get('users', []);
   const user = users.find(u => u.email === email);
@@ -909,22 +974,34 @@ async function handleForgotPassword(e) {
   }
   errEl.classList.remove('show');
 
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Отправка...';
+
   const code = String(Math.floor(100000 + Math.random() * 900000));
 
   try {
-    await emailjs.send("service_rls8p6t", "template_oj3comw", {
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
       to_email: email,
       to_name: user.nickname,
       subject: 'Восстановление пароля — KandyFresh Dev',
-      title: 'Восстановление пароля 🔑',
+      title: 'Восстановление пароля',
       message: 'Вы запросили сброс пароля. Ваш код:',
-      code: code
+      code: String(code)
     });
 
-    notify('📧 Код отправлен!', `Проверьте почту ${email} проверьте спам.`, 'success');
+    notify('📧 Код отправлен!', `Проверьте почту ${email}`, 'success');
     
     showModal(`
       <h3>Восстановление пароля</h3>
+      
+      <div class="spam-warning">
+        <div class="icon">⚠️</div>
+        <div>
+          <strong>Письмо может попасть в папку "Спам"</strong>
+          Проверьте папку "Спам", если письмо не пришло
+        </div>
+      </div>
+
       <div class="form-group">
         <label>Код из письма</label>
         <input type="text" id="resetCodeInput" maxlength="6" placeholder="000000" style="text-align:center;font-size:1.5rem;letter-spacing:5px">
@@ -935,26 +1012,37 @@ async function handleForgotPassword(e) {
       </div>
       <div class="form-error" id="resetError"></div>
       <button class="btn btn-primary" style="width:100%;margin-top:1rem" onclick="resetPassword('${email}')">Сбросить пароль</button>
+      <p style="margin-top:1rem;font-size:.8rem;color:var(--text-secondary);text-align:center">
+        Не получили код? <a href="#" onclick="resendResetCode('${email}')">Отправить повторно</a>
+      </p>
     `);
   } catch (err) {
     console.error('EmailJS Error:', err);
     errEl.textContent = 'Ошибка: ' + (err.text || 'Попробуйте позже');
     errEl.classList.add('show');
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Отправить код';
   }
 }
 
 async function resendResetCode(email) {
   try {
-    const res = await fetch(`${API_URL}/api/auth/forgot-password`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+    const users = DB.get('users', []);
+    const user = users.find(u => u.email === email);
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
+      to_email: email,
+      to_name: user.nickname,
+      subject: 'Восстановление пароля — KandyFresh Dev (повторно)',
+      title: 'Восстановление пароля',
+      message: 'Вы запросили повторную отправку кода. Ваш код:',
+      code: String(code)
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
-    notify('📧 Код отправлен повторно', `Проверьте почту ${email} проверьте спам.`, 'success');
+    notify('📧 Код отправлен повторно', `Проверьте почту ${email} (и папку "Спам")`, 'success');
   } catch (err) {
-    notify('❌ Ошибка', err.message, 'error');
+    notify('❌ Ошибка', err.text || 'Попробуйте позже', 'error');
   }
 }
 
@@ -962,17 +1050,17 @@ function resetPassword(email) {
   const code = document.getElementById('resetCodeInput').value.trim();
   const newPass = document.getElementById('resetNewPassword').value;
   const errEl = document.getElementById('resetError');
-
+  
   if (code.length !== 6) { errEl.textContent = 'Введите 6-значный код'; errEl.classList.add('show'); return; }
   if (newPass.length < 6) { errEl.textContent = 'Пароль минимум 6 символов'; errEl.classList.add('show'); return; }
-
+  
   errEl.classList.remove('show');
-
+  
   const users = DB.get('users', []);
   const user = users.find(u => u.email === email);
-  if (user) {
-    user.password = newPass;
-    DB.set('users', users);
+  if (user) { 
+    user.password = newPass; 
+    DB.set('users', users); 
   }
   closeModal();
   notify('Пароль изменён!', 'Теперь вы можете войти с новым паролем.', 'success');
@@ -1237,7 +1325,7 @@ function renderAdminUsers(panel) {
         <td>${date}</td>
         <td class="actions">
           <button class="btn btn-sm btn-secondary" onclick="editUser('${u.id}')">✏️</button>
-          ${u.role !== 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')">🗑</button>` : ''}
+          ${u.role !== 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')"></button>` : ''}
         </td>
       </tr>`;
     }).join('')}
@@ -1412,7 +1500,7 @@ async function sendMailing(e) {
   let sent = 0;
   for (const user of users) {
     try {
-      await emailjs.send("service_rls8p6t", "template_oj3comw", {
+      await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {
         to_email: user.email,
         to_name: user.nickname,
         subject: subject,
@@ -1424,14 +1512,14 @@ async function sendMailing(e) {
     } catch (err) {
       console.error('Ошибка отправки на', user.email, err);
     }
-}
+  }
 
   notify('✅ Рассылка отправлена!', `Успешно отправлено ${sent} писем`, 'success');
   btn.disabled = false;
   btn.textContent = '📧 Отправить рассылку';
   e.target.reset();
 }
-  
+
 function renderAdminSettings(panel) {
   const admin = getCurrentUser();
   panel.innerHTML = `
@@ -1504,6 +1592,7 @@ function initCelestialAnimation() {
     const rotation = progress * 360;
     body.style.transform = `rotate(${rotation}deg)`;
 
+    // Smooth color transition: moon (gray) -> sun (soft gold)
     const r = Math.round(192 + (255 - 192) * progress);
     const g = Math.round(192 + (215 - 192) * progress);
     const b = Math.round(192 + (0 - 192) * progress);
@@ -1583,6 +1672,14 @@ function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
+
+// ==================== SYNC ACROSS TABS ====================
+window.addEventListener('storage', (e) => {
+  if (e.key && e.key.startsWith('kf_')) {
+    // Sync nav when session changes in another tab
+    updateNav();
+  }
+});
 
 // ==================== INIT ====================
 window.addEventListener('DOMContentLoaded', () => {
