@@ -337,7 +337,7 @@ body.light-theme .footer{background:#e0e0e0}
 <script type="text/javascript">
   (function() {
     // ЗАМЕНИТЕ 'ВАШ_PUBLIC_KEY' на ваш реальный Public Key из шага 4
-    emailjs.init("ВАШ_PUBLIC_KEY");
+    emailjs.init("gC1YHY8USuPWM4vD7");
   })();
 </script>
 <body>
@@ -1413,13 +1413,13 @@ async function sendMailing(e) {
   let sent = 0;
   for (const user of users) {
     try {
-      await emailjs.send("ВАШ_SERVICE_ID", "ВАШ_TEMPLATE_ID", {
+      await emailjs.send("service_rls8p6t", "template_oj3comw", {
         to_email: user.email,
         to_name: user.nickname,
         subject: subject,
         title: subject,
         message: body,
-        code: '' // В рассылке код не нужен
+        code: ''
       });
       sent++;
     } catch (err) {
