@@ -5,14 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KandyFresh Dev — Сайты на заказ</title>
 <style>
-/* ===== RESET & VARIABLES ===== */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg-primary:#0a0a0a;--bg-secondary:#141414;--bg-card:#1a1a1a;
   --text-primary:#f0f0f0;--text-secondary:#a0a0a0;
   --accent:#e63946;--accent-hover:#ff4d5a;--accent-glow:rgba(230,57,70,.4);
   --border:#2a2a2a;--input-bg:#1e1e1e;
-  --theme-progress:0;
 }
 html{scroll-behavior:smooth}
 body{
@@ -79,7 +77,7 @@ section{padding:6rem 0;position:relative}
 @keyframes ripple{to{transform:scale(4);opacity:0}}
 .celestial-container{
   position:fixed;top:0;left:0;width:100%;height:100%;
-  pointer-events:none;z-index:0;overflow:hidden;
+  pointer-events:none;z-index:1;overflow:hidden;
 }
 .celestial-body{
   position:absolute;width:120px;height:120px;
@@ -97,6 +95,25 @@ section{padding:6rem 0;position:relative}
   90%{opacity:.3}
   100%{transform:translateY(-100px) rotate(720deg);opacity:0}
 }
+/* ===== CODE BACKGROUND ===== */
+.code-background{
+  position:fixed;
+  top:0;left:0;width:100%;height:100%;
+  z-index:0;
+  opacity:0.08;
+  pointer-events:none;
+  overflow:hidden;
+  font-family:'Courier New',monospace;
+  font-size:14px;
+  line-height:1.6;
+  color:#00ff00;
+  white-space:pre;
+  transition:opacity 0.5s ease, filter 0.5s ease;
+}
+.code-background.scrolled{
+  opacity:0.15;
+  filter:blur(1px);
+}
 .hero{min-height:100vh;display:flex;align-items:center;position:relative;padding-top:80px}
 .hero-content{position:relative;z-index:2;max-width:700px}
 .hero h1{margin-bottom:1.5rem}
@@ -107,15 +124,6 @@ section{padding:6rem 0;position:relative}
 }
 .hero p{font-size:1.2rem;margin-bottom:2rem;color:var(--text-secondary)}
 .hero-buttons{display:flex;gap:1rem;flex-wrap:wrap}
-.hero-visual{
-  position:absolute;right:5%;top:50%;transform:translateY(-50%);
-  width:400px;height:400px;z-index:1;opacity:.15;
-}
-.hero-visual .code-block{
-  font-family:'Courier New',monospace;font-size:.8rem;color:var(--accent);
-  line-height:1.8;animation:codeScroll 20s linear infinite;
-}
-@keyframes codeScroll{0%{transform:translateY(0)}100%{transform:translateY(-50%)}}
 .section-header{text-align:center;margin-bottom:4rem}
 .section-header h2{position:relative;display:inline-block}
 .section-header h2::after{
@@ -191,10 +199,6 @@ section{padding:6rem 0;position:relative}
 }
 @keyframes modalIn{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal h3{margin-bottom:1rem}
-.modal-close{
-  position:absolute;top:1rem;right:1rem;background:none;border:none;
-  color:var(--text-secondary);font-size:1.5rem;cursor:pointer;
-}
 .reviews-container{padding:100px 2rem 4rem;max-width:900px;margin:0 auto}
 .review-form{
   background:var(--bg-card);border:1px solid var(--border);border-radius:16px;
@@ -299,11 +303,9 @@ section{padding:6rem 0;position:relative}
   .nav-links.open{right:0}
   .hamburger{display:flex}
   .contact-grid{grid-template-columns:1fr}
-  .hero-visual{display:none}
   .admin-table{font-size:.8rem}
   .admin-table th,.admin-table td{padding:.5rem}
 }
-/* ===== LIGHT THEME (SOFT GRAY-WHITE) ===== */
 body.light-theme{
   --bg-primary:#f0f0f0;
   --bg-secondary:#e8e8e8;
@@ -335,12 +337,9 @@ body.light-theme .admin-panel{background:#ffffff}
 .badge{display:inline-block;padding:.2rem .6rem;border-radius:20px;font-size:.75rem;font-weight:600}
 .badge-admin{background:var(--accent);color:#fff}
 .badge-user{background:#555;color:#fff}
-.text-center{text-align:center}
 .mt-1{margin-top:1rem}.mt-2{margin-top:2rem}.mb-1{margin-bottom:1rem}.mb-2{margin-bottom:2rem}
-.flex{display:flex}.gap-1{gap:1rem}.items-center{align-items:center}.justify-between{justify-content:space-between}
 .hidden{display:none!important}
 .tag{display:inline-block;padding:.3rem .8rem;background:rgba(230,57,70,.15);color:var(--accent);border-radius:20px;font-size:.8rem;margin:.2rem}
-/* ===== SPAM WARNING BOX ===== */
 .spam-warning{
   background:rgba(230,57,70,.1);
   border:1px solid var(--accent);
@@ -353,14 +352,103 @@ body.light-theme .admin-panel{background:#ffffff}
   font-size:.9rem;
   color:var(--text-secondary);
 }
-.spam-warning .icon{
-  font-size:1.5rem;
-  flex-shrink:0;
+.spam-warning .icon{font-size:1.5rem;flex-shrink:0}
+.spam-warning strong{color:var(--accent);display:block;margin-bottom:.3rem}
+/* ===== PYTHON INTERPRETER ===== */
+.python-interpreter{
+  position:fixed;
+  bottom:2rem;
+  right:2rem;
+  width:350px;
+  background:rgba(26,26,26,0.95);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:1rem;
+  z-index:100;
+  backdrop-filter:blur(10px);
+  box-shadow:0 10px 30px rgba(0,0,0,0.5);
+  transition:all 0.3s ease;
 }
-.spam-warning strong{
+.python-interpreter:hover{
+  transform:translateY(-5px);
+  box-shadow:0 15px 40px rgba(0,0,0,0.6);
+}
+.python-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1rem;
+  padding-bottom:.5rem;
+  border-bottom:1px solid var(--border);
+}
+.python-header h4{
+  font-size:1rem;
   color:var(--accent);
-  display:block;
-  margin-bottom:.3rem;
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+}
+.python-header .dots{
+  display:flex;
+  gap:6px;
+}
+.python-header .dot{
+  width:12px;
+  height:12px;
+  border-radius:50%;
+}
+.python-header .dot.red{background:#ff5f57}
+.python-header .dot.yellow{background:#ffbd2e}
+.python-header .dot.green{background:#28c840}
+.python-output{
+  background:#0d0d0d;
+  border-radius:8px;
+  padding:.8rem;
+  min-height:80px;
+  max-height:150px;
+  overflow-y:auto;
+  font-family:'Courier New',monospace;
+  font-size:.85rem;
+  color:#00ff00;
+  margin-bottom:.8rem;
+  white-space:pre-wrap;
+}
+.python-input{
+  display:flex;
+  gap:.5rem;
+}
+.python-input input{
+  flex:1;
+  background:#1a1a1a;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:.6rem;
+  color:#fff;
+  font-family:'Courier New',monospace;
+  font-size:.9rem;
+  outline:none;
+}
+.python-input input:focus{
+  border-color:var(--accent);
+}
+.python-input button{
+  background:var(--accent);
+  color:#fff;
+  border:none;
+  border-radius:8px;
+  padding:.6rem 1rem;
+  cursor:pointer;
+  font-weight:600;
+  transition:all 0.3s;
+}
+.python-input button:hover{
+  background:var(--accent-hover);
+}
+.python-hint{
+  font-size:.75rem;
+  color:var(--text-secondary);
+  margin-top:.5rem;
+  text-align:center;
 }
 </style>
 </head>
@@ -368,6 +456,7 @@ body.light-theme .admin-panel{background:#ffffff}
 
 <div class="loader" id="loader"><div class="loader-spinner"></div></div>
 <div class="particles" id="particles"></div>
+<div class="code-background" id="codeBackground"></div>
 
 <div class="celestial-container">
   <div class="celestial-body" id="celestialBody" style="top:10%;right:10%">
@@ -426,31 +515,9 @@ body.light-theme .admin-panel{background:#ffffff}
         <h1>Создаю <span class="highlight">современные</span> сайты на заказ</h1>
         <p>Привет! Я KandyFresh Dev — веб-разработчик, который превращает идеи в стильные, быстрые и функциональные веб-решения.</p>
         <div class="hero-buttons">
-          <button class="btn btn-primary" onclick="navigate('reviews')"> Отзывы</button>
-          <button class="btn btn-secondary" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">🚀 Услуги</button>
+          <button class="btn btn-primary" onclick="navigate('reviews')">📝 Отзывы</button>
+          <button class="btn btn-secondary" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})"> Услуги</button>
         </div>
-      </div>
-    </div>
-    <div class="hero-visual">
-      <div class="code-block">
-        &lt;div class="dream"&gt;<br>
-        &nbsp;&nbsp;const site = await<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;kandyfresh.create({<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;design: 'modern',<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed: 'blazing',<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quality: 'premium'<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        &nbsp;&nbsp;return site.launch();<br>
-        &lt;/div&gt;<br><br>
-        &lt;div class="dream"&gt;<br>
-        &nbsp;&nbsp;const site = await<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;kandyfresh.create({<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;design: 'modern',<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed: 'blazing',<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quality: 'premium'<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;});<br>
-        &nbsp;&nbsp;return site.launch();<br>
-        &lt;/div&gt;
       </div>
     </div>
   </section>
@@ -482,7 +549,7 @@ body.light-theme .admin-panel{background:#ffffff}
           <p>Идеальное отображение на любых устройствах — от смартфонов до десктопов.</p>
         </div>
         <div class="service-card fade-in">
-          <div class="service-icon"></div>
+          <div class="service-icon">⚡</div>
           <h3>Оптимизация</h3>
           <p>Ускорение загрузки, улучшение Core Web Vitals и техническая оптимизация.</p>
         </div>
@@ -510,7 +577,7 @@ body.light-theme .admin-panel{background:#ffffff}
           </div>
         </div>
         <div class="portfolio-card fade-in">
-          <div class="portfolio-img" style="background:linear-gradient(135deg,#667eea,#764ba2)"></div>
+          <div class="portfolio-img" style="background:linear-gradient(135deg,#667eea,#764ba2)">📊</div>
           <div class="portfolio-info">
             <h3>Dashboard Analytics</h3>
             <p>Панель аналитики с графиками и real-time данными.</p>
@@ -518,7 +585,7 @@ body.light-theme .admin-panel{background:#ffffff}
           </div>
         </div>
         <div class="portfolio-card fade-in">
-          <div class="portfolio-img" style="background:linear-gradient(135deg,#f093fb,#f5576c)">🎯</div>
+          <div class="portfolio-img" style="background:linear-gradient(135deg,#f093fb,#f5576c)"></div>
           <div class="portfolio-info">
             <h3>Landing Page</h3>
             <p>Высококонверсионная посадочная страница для стартапа.</p>
@@ -545,7 +612,7 @@ body.light-theme .admin-panel{background:#ffffff}
             <div><strong>Telegram</strong><br><span style="color:var(--text-secondary)">@kandyfresh_dev</span></div>
           </div>
           <div class="contact-item">
-            <div class="icon"></div>
+            <div class="icon">🌐</div>
             <div><strong>GitHub</strong><br><span style="color:var(--text-secondary)">github.com/kandyfresh</span></div>
           </div>
         </div>
@@ -691,40 +758,48 @@ body.light-theme .admin-panel{background:#ffffff}
   <div class="modal" id="modalContent"></div>
 </div>
 
+<!-- Python Interpreter Widget -->
+<div class="python-interpreter" id="pythonInterpreter">
+  <div class="python-header">
+    <h4> Python Mini</h4>
+    <div class="dots">
+      <div class="dot red"></div>
+      <div class="dot yellow"></div>
+      <div class="dot green"></div>
+    </div>
+  </div>
+  <div class="python-output" id="pythonOutput">>>> Добро пожаловать в Python Mini!\n>>> Введите код (print, переменные, вычисления)</div>
+  <div class="python-input">
+    <input type="text" id="pythonInput" placeholder=">>> " onkeypress="if(event.key==='Enter')runPython()">
+    <button onclick="runPython()">▶</button>
+  </div>
+  <div class="python-hint">Поддержка: print(), переменные, + - * /</div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 <script>
-  // Initialize EmailJS with your public key
-  (function(){
-    emailjs.init("gC1YHY8USuPWM4vD7");
-  })();
+(function(){
+  emailjs.init("gC1YHY8USuPWM4vD7");
+})();
 </script>
 
 <script>
-// ==================== CONFIG ====================
 const EMAILJS_CONFIG = {
   serviceId: 'service_rls8p6t',
   templateId: 'template_oj3comw'
 };
 
-// ==================== DATA LAYER ====================
 const DB = {
   get(key, def = null) {
-    try { 
-      const d = localStorage.getItem('kf_' + key); 
-      return d ? JSON.parse(d) : def; 
-    } catch { return def; }
+    try { const d = localStorage.getItem('kf_' + key); return d ? JSON.parse(d) : def; }
+    catch { return def; }
   },
   set(key, val) { 
     localStorage.setItem('kf_' + key, JSON.stringify(val));
-    // Sync across tabs/windows
-    window.dispatchEvent(new StorageEvent('storage', {
-      key: 'kf_' + key,
-      newValue: JSON.stringify(val)
-    }));
+    window.dispatchEvent(new StorageEvent('storage', { key: 'kf_' + key, newValue: JSON.stringify(val) }));
   }
 };
 
-// Init admin
 if (!DB.get('users')) {
   DB.set('users', [{
     id: 'admin_1', email: 'admin@kandyfresh.dev', password: 'admin123',
@@ -737,17 +812,16 @@ if (!DB.get('siteContent')) {
     heroTitle: 'Создаю <span class="highlight">современные</span> сайты на заказ',
     heroDesc: 'Привет! Я KandyFresh Dev — веб-разработчик, который превращает идеи в стильные, быстрые и функциональные веб-решения.',
     services: [
-      { icon: '🎨', title: 'UI/UX Дизайн', desc: 'Современный и интуитивный дизайн, который привлекает и удерживает пользователей.' },
+      { icon: '', title: 'UI/UX Дизайн', desc: 'Современный и интуитивный дизайн, который привлекает и удерживает пользователей.' },
       { icon: '💻', title: 'Веб-разработка', desc: 'Адаптивные сайты с чистым кодом, быстрой загрузкой и SEO-оптимизацией.' },
       { icon: '🛒', title: 'Интернет-магазины', desc: 'Полноценные e-commerce решения с корзиной, оплатой и управлением товарами.' },
-      { icon: '📱', title: 'Мобильная адаптация', desc: 'Идеальное отображение на любых устройствах — от смартфонов до десктопов.' },
-      { icon: '', title: 'Оптимизация', desc: 'Ускорение загрузки, улучшение Core Web Vitals и техническая оптимизация.' },
+      { icon: '', title: 'Мобильная адаптация', desc: 'Идеальное отображение на любых устройствах — от смартфонов до десктопов.' },
+      { icon: '⚡', title: 'Оптимизация', desc: 'Ускорение загрузки, улучшение Core Web Vitals и техническая оптимизация.' },
       { icon: '🔧', title: 'Поддержка', desc: 'Техническая поддержка, обновления и доработки после запуска проекта.' }
     ]
   });
 }
 
-// ==================== AUTH ====================
 function getCurrentUser() {
   const sid = DB.get('session');
   if (!sid) return null;
@@ -783,7 +857,6 @@ function logout() {
   notify('Вы вышли из аккаунта', '', 'success');
 }
 
-// ==================== NOTIFICATIONS ====================
 function notify(title, text, type = 'info', code = '') {
   const existing = document.querySelectorAll('.notification');
   existing.forEach(n => n.remove());
@@ -794,7 +867,6 @@ function notify(title, text, type = 'info', code = '') {
   setTimeout(() => div.remove(), 8000);
 }
 
-// ==================== ROUTER ====================
 function navigate(page) {
   const user = getCurrentUser();
   if ((page === 'profile' || page === 'admin') && !user) { navigate('login'); return; }
@@ -819,7 +891,6 @@ function navigate(page) {
   setTimeout(initObservers, 100);
 }
 
-// ==================== FORM HANDLERS ====================
 function handleLogin(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value.trim();
@@ -881,7 +952,6 @@ async function handleRegister(e) {
     
     showModal(`
       <h3>Подтверждение email</h3>
-      
       <div class="spam-warning">
         <div class="icon">⚠️</div>
         <div>
@@ -889,7 +959,6 @@ async function handleRegister(e) {
           Проверьте папку "Спам" или "Промоакции", если письмо не пришло в течение 2 минут
         </div>
       </div>
-
       <p style="margin-bottom:1rem;color:var(--text-secondary)">Код отправлен на <strong>${email}</strong></p>
       <div class="form-group">
         <label>Введите код из письма</label>
@@ -924,7 +993,7 @@ async function resendCode(email, nickname) {
     });
     notify('📧 Код отправлен повторно', `Проверьте почту ${email} (и папку "Спам")`, 'success');
   } catch (err) {
-    notify(' Ошибка', err.text || 'Попробуйте позже', 'error');
+    notify('❌ Ошибка', err.text || 'Попробуйте позже', 'error');
   }
 }
 
@@ -993,7 +1062,6 @@ async function handleForgotPassword(e) {
     
     showModal(`
       <h3>Восстановление пароля</h3>
-      
       <div class="spam-warning">
         <div class="icon">⚠️</div>
         <div>
@@ -1001,7 +1069,6 @@ async function handleForgotPassword(e) {
           Проверьте папку "Спам", если письмо не пришло
         </div>
       </div>
-
       <div class="form-group">
         <label>Код из письма</label>
         <input type="text" id="resetCodeInput" maxlength="6" placeholder="000000" style="text-align:center;font-size:1.5rem;letter-spacing:5px">
@@ -1073,7 +1140,6 @@ function handleContactForm(e) {
   e.target.reset();
 }
 
-// ==================== REVIEWS ====================
 function renderReviews() {
   const user = getCurrentUser();
   const formArea = document.getElementById('reviewFormArea');
@@ -1213,7 +1279,6 @@ function viewImage(src) {
   document.getElementById('imageViewer').classList.add('active');
 }
 
-// ==================== PROFILE ====================
 function renderProfile() {
   const user = getCurrentUser();
   if (!user) return;
@@ -1268,7 +1333,6 @@ function updateProfile(e) {
   notify('Профиль обновлён!', '', 'success');
 }
 
-// ==================== ADMIN ====================
 let currentAdminTab = 'reviews';
 function switchAdminTab(tab, el) {
   currentAdminTab = tab;
@@ -1303,7 +1367,7 @@ function renderAdminReviews(panel) {
         <td class="actions">
           <button class="btn btn-sm ${r.closed ? 'btn-success' : 'btn-secondary'}" onclick="toggleReview('${r.id}');renderAdmin('reviews')">${r.closed ? 'Открыть' : 'Закрыть'}</button>
           <button class="btn btn-sm btn-secondary" onclick="editReview('${r.id}')">✏️</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteReview('${r.id}');renderAdmin('reviews')">🗑</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteReview('${r.id}');renderAdmin('reviews')"></button>
         </td>
       </tr>`;
     }).join('')}
@@ -1325,7 +1389,7 @@ function renderAdminUsers(panel) {
         <td>${date}</td>
         <td class="actions">
           <button class="btn btn-sm btn-secondary" onclick="editUser('${u.id}')">✏️</button>
-          ${u.role !== 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')"></button>` : ''}
+          ${u.role !== 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteUser('${u.id}')">🗑</button>` : ''}
         </td>
       </tr>`;
     }).join('')}
@@ -1566,7 +1630,6 @@ function updateAdminSettings(e) {
   renderAdmin('settings');
 }
 
-// ==================== MODAL ====================
 function showModal(html) {
   document.getElementById('modalContent').innerHTML = html;
   document.getElementById('modalOverlay').classList.add('active');
@@ -1575,12 +1638,43 @@ function closeModal() {
   document.getElementById('modalOverlay').classList.remove('active');
 }
 
-// ==================== MOON/SUN ANIMATION ====================
+// ===== CODE BACKGROUND ANIMATION =====
+const codeSnippets = [
+  'const site = await kandyfresh.create({\n  design: "modern",\n  speed: "blazing"\n});',
+  'function render() {\n  return <App />;\n}',
+  'import React from "react";\nimport { useState } from "react";',
+  'app.get("/", (req, res) => {\n  res.send("Hello World");\n});',
+  'SELECT * FROM users\nWHERE active = true;',
+  'git commit -m "feat: add new feature"',
+  'npm install express cors nodemailer',
+  'if (user.isAdmin) {\n  grantAccess();\n}',
+  'async function fetchData() {\n  const res = await fetch(url);\n  return res.json();\n}',
+  'class Developer {\n  constructor(name) {\n    this.name = name;\n  }\n}'
+];
+
+let currentCodeIndex = 0;
+function updateCodeBackground() {
+  const bg = document.getElementById('codeBackground');
+  let code = '';
+  for (let i = 0; i < 8; i++) {
+    const idx = (currentCodeIndex + i) % codeSnippets.length;
+    code += codeSnippets[idx] + '\n\n';
+  }
+  bg.textContent = code;
+  currentCodeIndex = (currentCodeIndex + 1) % codeSnippets.length;
+}
+
+// Update code every 3 seconds
+setInterval(updateCodeBackground, 3000);
+updateCodeBackground();
+
+// ===== CELESTIAL ANIMATION =====
 function initCelestialAnimation() {
   const body = document.getElementById('celestialBody');
   const circle = document.getElementById('celestialCircle');
   const craters = document.getElementById('moonCraters');
   const rays = document.getElementById('sunRays');
+  const codeBg = document.getElementById('codeBackground');
   const homePage = document.getElementById('page-home');
 
   window.addEventListener('scroll', () => {
@@ -1592,7 +1686,6 @@ function initCelestialAnimation() {
     const rotation = progress * 360;
     body.style.transform = `rotate(${rotation}deg)`;
 
-    // Smooth color transition: moon (gray) -> sun (soft gold)
     const r = Math.round(192 + (255 - 192) * progress);
     const g = Math.round(192 + (215 - 192) * progress);
     const b = Math.round(192 + (0 - 192) * progress);
@@ -1609,10 +1702,16 @@ function initCelestialAnimation() {
 
     const yPos = 10 + progress * 30;
     body.style.top = yPos + '%';
+
+    // Code background changes on scroll
+    if (progress > 0.3) {
+      codeBg.classList.add('scrolled');
+    } else {
+      codeBg.classList.remove('scrolled');
+    }
   });
 }
 
-// ==================== PARTICLES ====================
 function initParticles() {
   const container = document.getElementById('particles');
   for (let i = 0; i < 30; i++) {
@@ -1628,7 +1727,6 @@ function initParticles() {
   }
 }
 
-// ==================== INTERSECTION OBSERVER ====================
 function initObservers() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1640,17 +1738,14 @@ function initObservers() {
   document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right').forEach(el => observer.observe(el));
 }
 
-// ==================== NAVBAR SCROLL ====================
 window.addEventListener('scroll', () => {
   document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
 });
 
-// ==================== HAMBURGER ====================
 function toggleMenu() {
   document.getElementById('navLinks').classList.toggle('open');
 }
 
-// ==================== RIPPLE EFFECT ====================
 document.addEventListener('click', e => {
   const btn = e.target.closest('.btn');
   if (!btn) return;
@@ -1665,7 +1760,6 @@ document.addEventListener('click', e => {
   setTimeout(() => ripple.remove(), 600);
 });
 
-// ==================== UTILS ====================
 function escapeHtml(str) {
   if (!str) return '';
   const div = document.createElement('div');
@@ -1673,15 +1767,84 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-// ==================== SYNC ACROSS TABS ====================
 window.addEventListener('storage', (e) => {
   if (e.key && e.key.startsWith('kf_')) {
-    // Sync nav when session changes in another tab
     updateNav();
   }
 });
 
-// ==================== INIT ====================
+// ===== PYTHON INTERPRETER =====
+const pythonVariables = {};
+
+function runPython() {
+  const input = document.getElementById('pythonInput');
+  const output = document.getElementById('pythonOutput');
+  const code = input.value.trim();
+  
+  if (!code) return;
+  
+  let result = '';
+  
+  try {
+    // Handle print()
+    if (code.startsWith('print(') && code.endsWith(')')) {
+      const content = code.slice(6, -1);
+      if (content.startsWith('"') && content.endsWith('"')) {
+        result = content.slice(1, -1);
+      } else if (content.startsWith("'") && content.endsWith("'")) {
+        result = content.slice(1, -1);
+      } else if (pythonVariables[content] !== undefined) {
+        result = String(pythonVariables[content]);
+      } else {
+        // Try to evaluate expression
+        result = String(evalPython(content));
+      }
+    }
+    // Handle variable assignment
+    else if (code.includes('=') && !code.includes('==')) {
+      const [varName, value] = code.split('=').map(s => s.trim());
+      if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(varName)) {
+        if (value.startsWith('"') && value.endsWith('"')) {
+          pythonVariables[varName] = value.slice(1, -1);
+        } else if (value.startsWith("'") && value.endsWith("'")) {
+          pythonVariables[varName] = value.slice(1, -1);
+        } else {
+          pythonVariables[varName] = evalPython(value);
+        }
+        result = `✓ ${varName} = ${pythonVariables[varName]}`;
+      } else {
+        result = ' Ошибка: неверное имя переменной';
+      }
+    }
+    // Handle expressions
+    else {
+      result = String(evalPython(code));
+    }
+  } catch (e) {
+    result = '✗ Ошибка: ' + e.message;
+  }
+  
+  output.textContent += `\n>>> ${code}\n${result}`;
+  output.scrollTop = output.scrollHeight;
+  input.value = '';
+}
+
+function evalPython(expr) {
+  // Replace variable names with their values
+  let processed = expr;
+  for (const [name, value] of Object.entries(pythonVariables)) {
+    const regex = new RegExp(`\\b${name}\\b`, 'g');
+    processed = processed.replace(regex, typeof value === 'string' ? `"${value}"` : value);
+  }
+  
+  // Safe evaluation for basic math
+  if (/^[\d\s+\-*/().]+$/.test(processed)) {
+    return Function('"use strict";return (' + processed + ')')();
+  }
+  
+  throw new Error('Неподдерживаемое выражение');
+}
+
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => document.getElementById('loader').classList.add('hidden'), 800);
   updateNav();
